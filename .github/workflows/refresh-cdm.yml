@@ -1,0 +1,43 @@
+name: Refresh CDM data
+
+on:
+  schedule:
+    - cron: '0 3 1 * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - run: pnpm fetch-cdm
+
+      - name: Open PR if data changed
+        uses: peter-evans/create-pull-request@v6
+        with:
+          commit-message: 'chore: refresh CDM data'
+          title: 'Refresh CDM data'
+          body: |
+            Automated refresh of `src/data/cdm.json` and `src/data/raw-schemas.json` from the upstream NHSE repository.
+
+            Review the diff and merge if everything looks right.
+          branch: chore/refresh-cdm
+          add-paths: |
+            src/data/cdm.json
+            src/data/raw-schemas.json

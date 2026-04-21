@@ -1,0 +1,31 @@
+@import 'highlight.js/styles/github.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body,
+#app {
+  min-height: 100vh;
+}
+
+#app {
+  display: flex;
+  flex-direction: column;
+}
+
+.prose-cdm a {
+  color: #1d4ed8;
+  text-decoration: underline;
+  word-break: break-all;
+}
+
+.prose-cdm a:hover {
+  color: #1e40af;
+}
+
+.hljs {
+  background: transparent !important;
+  padding: 0 !important;
+}
