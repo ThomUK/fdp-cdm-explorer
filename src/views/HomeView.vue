@@ -53,6 +53,15 @@ const grouped = computed(() => {
           Data spec (PDF)
         </a>
       </div>
+      <p class="mt-3 text-xs text-slate-500">
+        Contains public sector information licensed under the
+        <a
+          href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+          target="_blank"
+          rel="noopener"
+          class="underline hover:text-[#005eb8]"
+        >Open Government Licence v3.0</a>.
+      </p>
     </header>
 
     <section v-for="group in grouped" :key="group.letter" class="mb-6">
