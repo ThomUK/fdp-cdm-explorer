@@ -29,7 +29,8 @@ async function main() {
   const schemas = doc?.components?.schemas ?? {};
   const paths = doc?.paths ?? {};
 
-  const entities = extractEntities(schemas);
+  const entityAllowlist = collectEntityNames(paths);
+  const entities = extractEntities(schemas, entityAllowlist);
   attachRelationships(entities, paths, schemas);
 
   const rawSchemas = extractRawSnippets(yamlText, Object.keys(entities));
@@ -59,7 +60,25 @@ async function main() {
   console.log(`  -> ${resolve(OUT_DIR, 'raw-schemas.json')}`);
 }
 
-function extractEntities(schemas) {
+function collectEntityNames(paths) {
+  // Real entities are the ones Palantir Foundry exposes as object types at
+  // /api/v2/ontologies/<ontology>/objects/<Entity>/... Every other Osdk.<X>
+  // schema (List*Response pagination wrappers, Search*Response, etc.) is
+  // API plumbing we don't want to browse as an entity.
+  // One upstream quirk: `mdtMeeting` uses camelCase in paths while every
+  // other entity uses PascalCase — normalise the first letter.
+  const re = /^\/api\/v2\/ontologies\/[^/]+\/objects\/([A-Za-z][A-Za-z0-9]+)/;
+  const names = new Set();
+  for (const path of Object.keys(paths)) {
+    const m = path.match(re);
+    if (!m) continue;
+    const raw = m[1];
+    names.add(raw[0].toUpperCase() + raw.slice(1));
+  }
+  return names;
+}
+
+function extractEntities(schemas, allowlist) {
   const entities = {};
   for (const [key, schema] of Object.entries(schemas)) {
     const m = key.match(/^Osdk\.([A-Z][A-Za-z0-9]+)$/);
@@ -67,6 +86,7 @@ function extractEntities(schemas) {
     if (!schema || schema.type !== 'object' || !schema.properties) continue;
 
     const name = m[1];
+    if (!allowlist.has(name)) continue;
     const required = new Set(schema.required ?? []);
     const metaProperties = [];
     const properties = [];
@@ -111,13 +131,16 @@ function readProperty(name, def, required) {
 function attachRelationships(entities, paths, schemas) {
   // We only consider the "list" form of each link (no {linkedObjectPrimaryKey})
   // because the single-object form is just a re-expression of the same link.
+  // Matches the "list" form of a link; case-insensitive first letter to cope
+  // with the upstream `mdtMeeting` camelCase oddity.
   const LINK_RE =
-    /^\/api\/v2\/ontologies\/[^/]+\/objects\/([A-Z][A-Za-z0-9]+)\/\{primaryKey\}\/links\/([a-zA-Z][a-zA-Z0-9]*)$/;
+    /^\/api\/v2\/ontologies\/[^/]+\/objects\/([A-Za-z][A-Za-z0-9]+)\/\{primaryKey\}\/links\/([a-zA-Z][a-zA-Z0-9]*)$/;
 
   for (const [pathKey, pathValue] of Object.entries(paths)) {
     const m = pathKey.match(LINK_RE);
     if (!m) continue;
-    const [, entity, link] = m;
+    const [, rawEntity, link] = m;
+    const entity = rawEntity[0].toUpperCase() + rawEntity.slice(1);
     if (!entities[entity]) continue;
 
     const get = pathValue?.get;
