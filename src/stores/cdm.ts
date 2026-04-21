@@ -11,6 +11,9 @@ export const useCdmStore = defineStore('cdm', () => {
   const meta = computed(() => ({
     version: cdm.version,
     title: cdm.title,
+    repoUrl: cdm.repoUrl,
+    schemaYamlUrl: cdm.schemaYamlUrl,
+    pdfUrl: cdm.pdfUrl,
     sourceUrl: cdm.sourceUrl,
     fetchedAt: cdm.fetchedAt,
   }));

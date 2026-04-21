@@ -23,18 +23,36 @@ const grouped = computed(() => {
       <p class="mt-2 text-slate-600 max-w-3xl">
         Browse the {{ store.entityCount }} entities, {{ store.propertyCount.toLocaleString() }} properties and
         {{ store.relationshipCount }} relationships of the NHS England Federated Data Platform
-        <a :href="store.meta.sourceUrl" target="_blank" rel="noopener" class="underline text-[#005eb8]">Canonical Data Model</a>.
+        <a :href="store.meta.repoUrl" target="_blank" rel="noopener" class="underline text-[#005eb8]">Canonical Data Model</a>.
         Click an entity to see its properties and links, or use
         <kbd class="px-1.5 py-0.5 rounded bg-slate-100 border border-slate-200 text-xs font-mono">⌘K</kbd>
         / <kbd class="px-1.5 py-0.5 rounded bg-slate-100 border border-slate-200 text-xs font-mono">Ctrl K</kbd>
         to search.
       </p>
-      <div class="mt-4 flex flex-wrap items-center gap-2 text-xs text-slate-500">
-        <span class="px-2 py-1 rounded bg-slate-100">Model version {{ store.meta.version }}</span>
-        <span class="px-2 py-1 rounded bg-slate-100">
+      <div class="mt-4 flex flex-wrap items-center gap-2 text-xs">
+        <span class="px-2 py-1 rounded bg-slate-100 text-slate-500">Model version {{ store.meta.version }}</span>
+        <span class="px-2 py-1 rounded bg-slate-100 text-slate-500">
           Data fetched {{ new Date(store.meta.fetchedAt).toISOString().split('T')[0] }}
         </span>
-        <router-link to="/graph" class="px-2 py-1 rounded bg-[#005eb8] text-white hover:bg-[#004280]">
+        <a
+          :href="store.meta.schemaYamlUrl"
+          target="_blank"
+          rel="noopener"
+          class="inline-flex items-center gap-1 px-2 py-1 rounded border border-slate-200 bg-white text-slate-600 hover:border-[#005eb8] hover:text-[#005eb8]"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" class="w-3.5 h-3.5" fill="currentColor"><path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd" /></svg>
+          Schema YAML
+        </a>
+        <a
+          :href="store.meta.pdfUrl"
+          target="_blank"
+          rel="noopener"
+          class="inline-flex items-center gap-1 px-2 py-1 rounded border border-slate-200 bg-white text-slate-600 hover:border-[#005eb8] hover:text-[#005eb8]"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" class="w-3.5 h-3.5" fill="currentColor"><path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm6.5 9v-3h1V9h-2v4h1zm-4-3h1v3h-1v-3zm.5-1h1.5a1 1 0 011 1v1a1 1 0 01-1 1H7v1H6v-4h1zm0 2h1v-1H7v1zm6 0a1 1 0 00-1-1v3a1 1 0 001-1v-1z" clip-rule="evenodd" /></svg>
+          Data spec (PDF)
+        </a>
+        <router-link to="/graph" class="inline-flex items-center gap-1 px-2 py-1 rounded bg-[#005eb8] text-white hover:bg-[#004280]">
           Open relationship graph →
         </router-link>
       </div>

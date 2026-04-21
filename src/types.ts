@@ -28,6 +28,9 @@ export interface Entity {
 export interface Cdm {
   version: string;
   title: string;
+  repoUrl: string;
+  schemaYamlUrl: string;
+  pdfUrl: string;
   sourceUrl: string;
   fetchedAt: string;
   entities: Record<string, Entity>;

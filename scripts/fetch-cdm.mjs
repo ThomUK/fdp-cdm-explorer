@@ -13,6 +13,9 @@ import yaml from 'js-yaml';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const OUT_DIR = resolve(__dirname, '../src/data');
 
+const REPO_URL = 'https://github.com/nhsengland/fdp-canonical-data-model';
+const SCHEMA_YAML_URL = `${REPO_URL}/blob/main/canonical-data-model-openapi.yaml`;
+const PDF_URL = `${REPO_URL}/blob/main/data-spec.pdf`;
 const SOURCE_URL =
   'https://raw.githubusercontent.com/nhsengland/fdp-canonical-data-model/main/canonical-data-model-openapi.yaml';
 
@@ -38,6 +41,9 @@ async function main() {
   const cdm = {
     version: doc?.info?.version ?? 'unknown',
     title: doc?.info?.title ?? 'NHS FDP Canonical Data Model',
+    repoUrl: REPO_URL,
+    schemaYamlUrl: SCHEMA_YAML_URL,
+    pdfUrl: PDF_URL,
     sourceUrl: SOURCE_URL,
     fetchedAt: new Date().toISOString(),
     entities,
