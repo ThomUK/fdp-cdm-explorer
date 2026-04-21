@@ -13,15 +13,34 @@ const fetchedLabel = computed(() => {
 
 <template>
   <header class="border-b border-slate-200 bg-white sticky top-0 z-30">
-    <div class="max-w-[1400px] mx-auto px-4 py-3 flex items-center gap-4">
-      <router-link to="/" class="flex items-center gap-2 font-semibold text-slate-900">
+    <div class="max-w-[1400px] mx-auto px-4 py-2 flex items-center gap-4">
+      <router-link to="/" class="flex items-center gap-2 font-semibold text-slate-900 shrink-0">
         <span class="inline-flex items-center justify-center w-7 h-7 rounded bg-[#005eb8] text-white text-xs font-bold">CDM</span>
-        <span>FDP Explorer</span>
+        <span class="hidden sm:inline">FDP Explorer</span>
       </router-link>
 
-      <nav class="hidden sm:flex items-center gap-1 text-sm ml-2">
-        <router-link to="/" class="px-3 py-1.5 rounded hover:bg-slate-100" active-class="bg-slate-100 text-slate-900" exact-active-class="bg-slate-100">Entities</router-link>
-        <router-link to="/graph" class="px-3 py-1.5 rounded hover:bg-slate-100" active-class="bg-slate-100 text-slate-900">Graph</router-link>
+      <nav class="flex items-center p-0.5 rounded-lg bg-slate-100 gap-0.5" aria-label="Primary">
+        <router-link
+          to="/"
+          class="flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium text-slate-600 hover:text-slate-900 transition"
+          active-class="!bg-white !text-[#005eb8] shadow-sm"
+          exact-active-class="!bg-white !text-[#005eb8] shadow-sm"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" class="w-4 h-4" fill="currentColor">
+            <path d="M3 4a1 1 0 011-1h3a1 1 0 011 1v3a1 1 0 01-1 1H4a1 1 0 01-1-1V4zm0 9a1 1 0 011-1h3a1 1 0 011 1v3a1 1 0 01-1 1H4a1 1 0 01-1-1v-3zm9-9a1 1 0 011-1h3a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1V4zm0 9a1 1 0 011-1h3a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-3z" />
+          </svg>
+          Entity list
+        </router-link>
+        <router-link
+          to="/graph"
+          class="flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium text-slate-600 hover:text-slate-900 transition"
+          active-class="!bg-white !text-[#005eb8] shadow-sm"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" class="w-4 h-4" fill="currentColor">
+            <path d="M14 5a2 2 0 11-4 0 2 2 0 014 0zM6 17a2 2 0 11-4 0 2 2 0 014 0zm12 0a2 2 0 11-4 0 2 2 0 014 0zm-9.4-9.7 3.3 6.3-1.77.93L6.83 8.23 8.6 7.3zM10.8 13.6l2.9-5.5 1.77.93-2.9 5.5-1.77-.93z" />
+          </svg>
+          Graph
+        </router-link>
       </nav>
 
       <button
