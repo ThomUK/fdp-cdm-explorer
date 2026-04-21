@@ -58,13 +58,14 @@ function build(focus?: string) {
       if (!visibleNames.has(r.target)) continue;
       const key = `${e.name}->${r.target}::${r.name}`;
       if (edgeSet.has(key)) continue;
+      const cardLabel = r.cardinality === 'many' ? '1:N' : '1:1';
       edgeSet.set(key, {
         id: key,
         from: e.name,
         to: r.target,
         arrows: 'to',
-        label: r.name,
-        font: { size: 10, color: '#64748b', align: 'top' },
+        label: `${r.name}\n${cardLabel}`,
+        font: { size: 10, color: '#64748b', align: 'top', multi: false },
         color: { color: r.cardinality === 'many' ? '#10b981' : '#0ea5e9', opacity: 0.6 },
         smooth: { enabled: true, type: 'dynamic', roundness: 0.3 },
       });

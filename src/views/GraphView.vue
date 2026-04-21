@@ -21,6 +21,16 @@ const focusOptions = computed(() => store.entities.map((e) => e.name));
         <option v-for="n in focusOptions" :key="n" :value="n">{{ n }}</option>
       </select>
       <span class="text-xs text-slate-500">Double-click a node to open its detail page. Drag to pan, scroll to zoom.</span>
+      <div class="ml-auto flex items-center gap-3 text-xs">
+        <span class="flex items-center gap-1">
+          <span class="inline-block w-4 h-0.5 bg-sky-500"></span>
+          <span class="text-slate-600">1:1</span>
+        </span>
+        <span class="flex items-center gap-1">
+          <span class="inline-block w-4 h-0.5 bg-emerald-500"></span>
+          <span class="text-slate-600">1:N</span>
+        </span>
+      </div>
     </div>
     <div class="flex-1 min-h-0 bg-slate-50">
       <RelationshipGraph :focus="focus || undefined" />
