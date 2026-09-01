@@ -2,7 +2,7 @@
   "version": "3.0.1",
   "title": "Palantir OpenAPI",
   "sourceUrl": "https://raw.githubusercontent.com/nhsengland/fdp-canonical-data-model/main/canonical-data-model-openapi.yaml",
-  "fetchedAt": "2026-04-21T19:25:58.297Z",
+  "fetchedAt": "2026-09-01T08:26:52.049Z",
   "entities": {
     "Admission": {
       "name": "Admission",
