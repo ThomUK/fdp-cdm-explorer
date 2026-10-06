@@ -32,7 +32,7 @@ const grouped = computed(() => {
       <div class="mt-4 flex flex-wrap items-center gap-2 text-xs">
         <span class="px-2 py-1 rounded bg-slate-100 text-slate-500">Model version {{ store.meta.version }}</span>
         <span class="px-2 py-1 rounded bg-slate-100 text-slate-500">
-          Data fetched {{ new Date(store.meta.fetchedAt).toISOString().split('T')[0] }}
+          Model updated {{ new Date(store.meta.fetchedAt).toISOString().split('T')[0] }}
         </span>
         <a
           :href="store.meta.schemaYamlUrl"

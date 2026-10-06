@@ -5,7 +5,7 @@
  * src/data/ for consumption by the Vue app.
  */
 
-import { writeFile, mkdir } from 'node:fs/promises';
+import { writeFile, mkdir, readFile } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import yaml from 'js-yaml';
@@ -50,11 +50,30 @@ async function main() {
   };
 
   await mkdir(OUT_DIR, { recursive: true });
-  await writeFile(resolve(OUT_DIR, 'cdm.json'), JSON.stringify(cdm, null, 2));
-  await writeFile(
-    resolve(OUT_DIR, 'raw-schemas.json'),
-    JSON.stringify(rawSchemas, null, 2),
-  );
+  const cdmPath = resolve(OUT_DIR, 'cdm.json');
+  const rawPath = resolve(OUT_DIR, 'raw-schemas.json');
+  const nextRawText = JSON.stringify(rawSchemas, null, 2);
+
+  // Only touch the committed files when the model itself has changed.
+  // `fetchedAt` is deliberately excluded from the comparison: otherwise every
+  // run produces a one-line timestamp diff and the scheduled workflow opens a
+  // pointless PR each month even when upstream is identical. As a result
+  // `fetchedAt` means "when the data last changed", not "when we last looked".
+  const existing = await readExistingCdm(cdmPath);
+  const existingRawText = await readTextOrNull(rawPath);
+  if (
+    existing &&
+    JSON.stringify(withoutFetchedAt(existing)) === JSON.stringify(withoutFetchedAt(cdm)) &&
+    existingRawText === nextRawText
+  ) {
+    console.log(
+      `No upstream changes since ${existing.fetchedAt}; leaving src/data/ untouched.`,
+    );
+    return;
+  }
+
+  await writeFile(cdmPath, JSON.stringify(cdm, null, 2));
+  await writeFile(rawPath, nextRawText);
 
   const count = Object.keys(entities).length;
   const relCount = Object.values(entities).reduce(
@@ -64,6 +83,29 @@ async function main() {
   console.log(`Wrote ${count} entities with ${relCount} relationships.`);
   console.log(`  -> ${resolve(OUT_DIR, 'cdm.json')}`);
   console.log(`  -> ${resolve(OUT_DIR, 'raw-schemas.json')}`);
+}
+
+async function readExistingCdm(path) {
+  const text = await readTextOrNull(path);
+  if (text === null) return null;
+  try {
+    return JSON.parse(text);
+  } catch {
+    return null;
+  }
+}
+
+async function readTextOrNull(path) {
+  try {
+    return await readFile(path, 'utf8');
+  } catch {
+    return null;
+  }
+}
+
+function withoutFetchedAt(obj) {
+  const { fetchedAt, ...rest } = obj;
+  return rest;
 }
 
 function collectEntityNames(paths) {

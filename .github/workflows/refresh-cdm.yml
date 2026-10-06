@@ -13,7 +13,12 @@ jobs:
   refresh:
     runs-on: ubuntu-latest
     steps:
+      # Scheduled runs execute against the repo's default branch. Pin to main
+      # explicitly so the job always runs the current script and the PR always
+      # targets main, regardless of what the default branch is set to.
       - uses: actions/checkout@v4
+        with:
+          ref: main
 
       - uses: pnpm/action-setup@v4
         with:
@@ -38,6 +43,7 @@ jobs:
 
             Review the diff and merge if everything looks right.
           branch: chore/refresh-cdm
+          base: main
           add-paths: |
             src/data/cdm.json
             src/data/raw-schemas.json

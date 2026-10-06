@@ -55,7 +55,7 @@ const fetchedLabel = computed(() => {
 
       <div class="hidden lg:flex items-center gap-2 text-xs text-slate-500">
         <span class="px-2 py-1 rounded bg-slate-100">v{{ store.meta.version }}</span>
-        <span>fetched {{ fetchedLabel }}</span>
+        <span>updated {{ fetchedLabel }}</span>
         <a :href="store.meta.repoUrl" target="_blank" rel="noopener" class="underline hover:text-slate-700">repo</a>
       </div>
     </div>
